@@ -16,8 +16,8 @@ connectToDb();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use("/api/v1", loginRouter);
-app.use("/api/v1", authMiddleWare, userRouter);
+app.use("/api/v1/auth", loginRouter);
+app.use("/api/v1/users", authMiddleWare, userRouter);
 
 app.listen(PORT, () => {
 	console.log(`server running on port ${PORT}`);
