@@ -1,10 +1,10 @@
 const express = require("express");
-const { User } = require("./models/Models");
+const { User, Account } = require("./models/Models");
 const processTransaction = require("./service/transferfund");
 
 const router = express.Router();
 
-router.post("/new", async (req, res) => {
+router.post("/transaction", async (req, res) => {
 	try {
 		const { fromUser, toUser, amount } = req.body;
 		if (!fromUser || !toUser || !amount) {
@@ -33,6 +33,21 @@ router.post("/new", async (req, res) => {
 	} catch (e) {
 		console.log("error completing transaction ", e);
 		return res.status(500).json({ message: "Internal server error" });
+	}
+});
+
+router.get("/", async (req, res) => {
+	try {
+		const userId = req.user.userId;
+		console.log("userid", userId);
+		const account = await Account.findOne({ userId: userId });
+		if (!account) {
+			console.log("account not found");
+			return res.status(400).json({ message: "Account not found" });
+		}
+		return res.status(200).json({ balance: account.balance });
+	} catch (e) {
+		console.log("issue fetching balance:: ", e);
 	}
 });
 
