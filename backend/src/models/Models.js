@@ -29,31 +29,6 @@ const accountSchema = mongoose.Schema({
 	},
 });
 
-// const transactionSchema = mongoose.Schema({
-// 	accountId: {
-// 		type: mongoose.Schema.Types.ObjectId,
-// 		ref: "Account",
-// 		required: true,
-// 	},
-// 	amount: {
-// 		type: Number,
-// 		required: true,
-// 	},
-// 	type: {
-// 		type: String,
-// 		enum: ["WITHDRAWl", "DEPOSIT"],
-// 	},
-// 	timestamp: {
-// 		type: Date,
-// 		default: Date.now(),
-// 	},
-// 	description: {
-// 		type: string,
-// 		maxlength: 100,
-// 		required: false,
-// 	},
-// });
-
 User = mongoose.model("User", userSchema);
 Account = mongoose.model("Account", accountSchema);
 

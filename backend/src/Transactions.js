@@ -4,7 +4,7 @@ const processTransaction = require("./service/transferfund");
 
 const router = express.Router();
 
-router.post("/newtransaction", async (req, res) => {
+router.post("/new", async (req, res) => {
 	try {
 		const { fromUser, toUser, amount } = req.body;
 		if (!fromUser || !toUser || !amount) {
@@ -13,17 +13,23 @@ router.post("/newtransaction", async (req, res) => {
 				.status(400)
 				.json({ message: "Please provide a valid transaction" });
 		}
-		const fromUserObj = await User.findById(fromUserId).session(session);
-		const toUserOBJ = await User.findById(toUserId).session(session);
+		const fromUserObj = await User.findOne({ email: fromUser });
+		const toUserObj = await User.findOne({ email: toUser });
 
 		if (!fromUserObj || !toUserObj) {
 			console.log("transcation user issue ");
 			return res.status(400).json({ message: "Please provide valid users" });
 		}
-
+		console.log("amount:: ", amount);
 		const amountCent = amount * 100;
 
-		processTransaction(fromUserObj._id, toUserOBJ._id, amount);
+		const { message } = await processTransaction(
+			fromUserObj._id,
+			toUserObj._id,
+			amountCent
+		);
+
+		res.status(200).json({ message });
 	} catch (e) {
 		console.log("error completing transaction ", e);
 		return res.status(500).json({ message: "Internal server error" });

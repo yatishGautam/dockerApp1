@@ -9,6 +9,7 @@ const cors = require("cors");
 
 const loginRouter = require("./src/Login");
 const userRouter = require("./src/User");
+const transactionRouter = require("./src/Transactions");
 const authMiddleWare = require("./src/middlewares/auth");
 
 connectToDb();
@@ -16,8 +17,9 @@ connectToDb();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use("/api/v1/auth", loginRouter);
+app.use("/api/v1", loginRouter);
 app.use("/api/v1/users", authMiddleWare, userRouter);
+app.use("/api/v1/transaction", authMiddleWare, transactionRouter);
 
 app.listen(PORT, () => {
 	console.log(`server running on port ${PORT}`);

@@ -27,11 +27,16 @@ const transferFunds = async (fromUserId, toUserId, amount) => {
 			{ $inc: { balance: +amount } }
 		).session(session);
 
-		await toUserAccount.save({ session });
-		await fromUserAccount.save({ session });
+		// await toUserAccount.save({ session });
+		// await fromUserAccount.save({ session });
 
 		await session.commitTransaction();
 		console.log("transaction commited successfully");
+		return {
+			message: `transferred $${amount / 100} your updated balance $${
+				fromUserAccount.balance / 100
+			}`,
+		};
 	} catch (e) {
 		console.log("error while transferring funds ", e);
 		await session.abortTransaction();
