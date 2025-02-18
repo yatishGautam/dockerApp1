@@ -40,7 +40,7 @@ router.post("/login", async (req, res) => {
 		if (!user || !password) {
 			return res.status(400).json({ message: "invalid password or email" });
 		}
-		const isMatch = bcrypt.compare(password, user.password);
+		const isMatch = await bcrypt.compare(password, user.password);
 		if (!isMatch) {
 			return res.status(400).json({ message: "invalid password or email" });
 		}
@@ -52,7 +52,7 @@ router.post("/login", async (req, res) => {
 			message: "login successful",
 			token,
 		});
-	} catch {
+	} catch (e) {
 		console.log("login error", e);
 		return res.status(500).json({ message: "Internal sever error" });
 	}

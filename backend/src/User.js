@@ -1,6 +1,6 @@
 const express = require("express");
 const User = require("../models/userSchema");
-const router = express.router();
+const router = express.Router();
 const bcrypt = require("bcrypt");
 
 router.put("/", async (req, res) => {
@@ -35,8 +35,22 @@ router.put("/", async (req, res) => {
 
 router.get("/bulk", async (req, res) => {
 	try {
+		const { filter } = req.query;
+		console.log("filter in query ", filter);
+		let query = {};
+		if (filter) {
+			const regex = new RegExp(filter, "i");
+			query = {
+				$or: [{ name: regex }],
+			};
+		}
+		const users = await User.find(query).select("email name");
+
+		return res.status(200).json({ users });
 	} catch (e) {
 		console.log("issue fetching users ", e);
 		return res.status(500).json({ message: "internal server error" });
 	}
 });
+
+module.exports = router;
